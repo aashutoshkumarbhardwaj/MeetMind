@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeetMind — Product Demo & Skill Showcase</title>
+  <style>
+    :root {
+      --bg: #050811;
+      --card-bg: #0c1220;
+      --border: #1a263d;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.25);
+      --emerald: #10b981;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(16, 185, 129, 0.08) 0%, transparent 45%);
+    }
+
+    /* Top Navigation / Header */
+    header {
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: rgba(12, 18, 32, 0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4338ca, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .logo-badge svg {
+      width: 20px;
+      height: 20px;
+      color: #fff;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 9999px;
+    }
+
+    /* Main Grid */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 32px;
+      padding: 28px 32px;
+      max-width: 1380px;
+      margin: 0 auto;
+      width: 100%;
+      align-items: start;
+    }
+
+    /* Extension Simulator Container */
+    .extension-device-frame {
+      background: #090e18;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      position: sticky;
+      top: 24px;
+    }
+
+    .frame-bar {
+      height: 36px;
+      background: #0d1424;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 8px;
+    }
+
+    .frame-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .frame-title {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-left: auto;
+      font-family: ui-monospace, monospace;
+    }
+
+    .extension-iframe {
+      width: 100%;
+      height: 610px;
+      border: none;
+      display: block;
+      background: #090d14;
+    }
+
+    /* Skill Showcase Dashboard */
+    .showcase-deck {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::after {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tagline {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #818cf8;
+      margin-bottom: 6px;
+    }
+
+    .hero-heading {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .hero-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Skills Grid */
+    .skills-header {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .skill-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .skill-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .skill-icon-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .skill-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a5b4fc;
+      font-size: 14px;
+    }
+
+    .skill-tag {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-emerald { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-indigo { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .tag-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-cyan { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
+
+    .skill-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .skill-body {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Live Telemetry Bar */
+    .telemetry-deck {
+      background: #090e18;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metric-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .metric-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <header>
+    <div class="brand-group">
+      <div class="logo-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" x2="12" y1="19" y2="22"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">MeetMind — Product Demo &amp; Skill Brag</div>
+        <div class="brand-sub">Privacy-First Meeting Memory &amp; Interview Coach</div>
+      </div>
+    </div>
+    <div class="badge-pill">
+      <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="3"/></svg>
+      Backend Live: Open-Weight AI Core Active
+    </div>
+  </header>
+
+  <!-- Main Showcase Grid -->
+  <main>
+    <!-- Left Column: Actual Interactive Extension -->
+    <div class="extension-device-frame">
+      <div class="frame-bar">
+        <div class="frame-dots">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div class="frame-title">chrome-extension://nipijlogbhnln.../popup.html</div>
+      </div>
+      <iframe id="extensionFrame" class="extension-iframe" src="popup.html"></iframe>
+    </div>
+
+    <!-- Right Column: Skill Brag & Feature Architecture -->
+    <div class="showcase-deck">
+      <div class="hero-banner">
+        <div class="hero-tagline">Hacktoberfest Week 3 — Slow and Steady 🦥</div>
+        <h1 class="hero-heading">MeetMind: Channel Your Inner Sloth. Never Take Meeting Notes Again.</h1>
+        <p class="hero-desc">
+          MeetMind runs directly in your browser tab, capturing audio or captions, and uses open-weight AI to extract verified decisions, checklist action items with owners, and coaching scorecards. Zero manual effort.
+        </p>
+      </div>
+
+      <!-- Live Telemetry -->
+      <div class="telemetry-deck">
+        <div class="metric-item">
+          <div class="metric-val">$0.00</div>
+          <div class="metric-label">Inference Cost (Open-Weight)</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">100%</div>
+          <div class="metric-label">Data Sovereignty (Local)</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">30-45m</div>
+          <div class="metric-label">Time Saved Per Meeting</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-val">3-Tier</div>
+          <div class="metric-label">Strict Evidence Grounding</div>
+        </div>
+      </div>
+
+      <!-- Skills Grid -->
+      <div class="skills-header">
+        <span>⚡ Core Engineered Skills Showcase</span>
+      </div>
+
+      <div class="skills-grid">
+        <!-- Skill 1 -->
+        <div class="skill-card">
+          <div class="skill-icon-bar">
+            <div class="skill-icon">🎙️</div>
+            <span class="skill-tag tag-emerald">Tab-Capture Only</span>
+          </div>
+          <div class="skill-title">Skill 1: Isolated Tab Audio Capture</div>
+          <div class="skill-body">
+            Uses Chrome MV3 Offscreen documents to record remote call audio while completely excluding the user's noisy microphone. In-memory backup prevents any audio loss during network blips.
+          </div>
+        </div>
+
+        <!-- Skill 2 -->
+        <div class="skill-card">
+          <div class="skill-icon-bar">
+            <div class="skill-icon">🧠</div>
+            <span class="skill-tag tag-indigo">Ollama &amp; Whisper</span>
+          </div>
+          <div class="skill-title">Skill 2: Open-Weight AI Architecture</div>
+          <div class="skill-body">
+            Runs 100% locally with <code>faster-whisper</code> and Ollama (<code>qwen2.5:7b</code>, <code>llama3.2</code>). Your confidential conversations, salary talks, and client NDAs never touch a cloud server.
+          </div>
+        </div>
+
+        <!-- Skill 3 -->
+        <div class="skill-card">
+          <div class="skill-icon-bar">
+            <div class="skill-icon">🛡️</div>
+            <span class="skill-tag tag-amber">Anti-Hallucination</span>
+          </div>
+          <div class="skill-title">Skill 3: Strict Evidence Grounding Protocol</div>
+          <div class="skill-body">
+            Enforces strict 3-tier evidence classification: <code>[Direct Evidence]</code> for exact quotes, <code>[AI Inference]</code> for analysis, and <code>[Insufficient Evidence]</code> for omissions.
+          </div>
+        </div>
+
+        <!-- Skill 4 -->
+        <div class="skill-card">
+          <div class="skill-icon-bar">
+            <div class="skill-icon">🔍</div>
+            <span class="skill-tag tag-cyan">Fast Lexical Q&amp;A</span>
+          </div>
+          <div class="skill-title">Skill 4: Cross-Session Meeting Intelligence</div>
+          <div class="skill-body">
+            Deterministic keyword retrieval searches across weeks of saved meetings in under 5ms, returning answers with cited source quotes without requiring costly vector databases.
+          </div>
+        </div>
+
+        <!-- Skill 5 -->
+        <div class="skill-card">
+          <div class="skill-icon-bar">
+            <div class="skill-icon">🎨</div>
+            <span class="skill-tag tag-emerald">Live Formatting</span>
+          </div>
+          <div class="skill-title">Skill 5: High-Precision Markdown Engine</div>
+          <div class="skill-body">
+            Zero-dependency client-side Markdown parser transforms raw AI outputs into elegant, glowing status pills, interactive checklist tick marks (<code>- [ ]</code>), and 1-click <code>.md</code> export.
+          </div>
+        </div>
+
+        <!-- Skill 6 -->
+        <div class="skill-card">
+          <div class="skill-icon-bar">
+            <div class="skill-icon">🔄</div>
+            <span class="skill-tag tag-indigo">Speech Smoothing</span>
+          </div>
+          <div class="skill-title">Skill 6: Progressive Speech De-duplication</div>
+          <div class="skill-body">
+            Space-aware recursive walkers in the content script and backend regex filters strip repetitive Google Meet speech recognition stutters into clean, coherent sentences.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

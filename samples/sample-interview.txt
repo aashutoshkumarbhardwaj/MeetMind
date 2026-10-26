@@ -1,0 +1,8 @@
+Interviewer: Explain the difference between a process and a thread.
+Candidate: A process has its own memory space. Threads run inside a process and share its memory, but each thread has its own stack.
+Interviewer: What can go wrong when two threads update the same counter?
+Candidate: A race condition. The updates can overlap and one update may be lost. A mutex or another synchronization mechanism can protect the critical section.
+Interviewer: What is the trade-off of using a mutex everywhere?
+Candidate: It can add contention and reduce concurrency. I would lock only the shared state that needs protection and keep the critical section small.
+Interviewer: Can you explain deadlock conditions?
+Candidate: I remember circular wait and hold-and-wait, but I cannot confidently name all four conditions right now.

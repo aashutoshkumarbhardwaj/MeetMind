@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: meetmind-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: API_TOKEN
+        sync: false
+      - key: AI_PROVIDER
+        value: groq
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_CHAT_MODEL
+        value: openai/gpt-oss-120b
+      - key: TRANSCRIPTION_PROVIDER
+        value: groq
+      - key: GROQ_TRANSCRIPTION_MODEL
+        value: whisper-large-v3-turbo

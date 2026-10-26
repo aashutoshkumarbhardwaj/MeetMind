@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "MeetMind — Meeting Memory & Interview Coach",
+  "version": "0.3.0",
+  "description": "Record browser-tab audio or use Meet captions, then create evidence-grounded meeting notes and interview reviews.",
+  "permissions": ["storage", "activeTab", "tabCapture", "offscreen", "downloads", "tabs", "scripting"],
+  "host_permissions": ["https://meet.google.com/*", "http://localhost:8000/*", "http://127.0.0.1:8000/*", "https://*.onrender.com/*"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
+  "background": {
+    "service_worker": "background/service_worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "MeetMind",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
