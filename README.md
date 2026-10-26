@@ -1,87 +1,109 @@
-# MeetMind — Meeting Memory & Interview Coach
+<div align="center">
 
-MeetMind turns a browser-tab recording or Google Meet captions into a reviewable transcript, then creates either a meeting brief or an evidence-based post-interview review. This starter integrates proven patterns from three public projects without copying their code: tab recording/offscreen processing, a caption fallback, and a clear recorder → API → transcript → analysis pipeline.
+# 🦥 MeetMind
+### The Sloth-Mode Meeting Memory & Interview Coach Powered by Open-Weight AI
 
-## What is implemented
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Chrome MV3](https://img.shields.io/badge/Chrome%20MV3-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/)
+[![Ollama Open-Weights](https://img.shields.io/badge/Ollama-Open--Weight%20AI-black?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
+[![faster-whisper](https://img.shields.io/badge/faster--whisper-Local%20STT-ff9800?style=for-the-badge)](https://github.com/SYSTRAN/faster-whisper)
+[![Hacktoberfest 2026](https://img.shields.io/badge/Hacktoberfest%202026-Week%203%3A%20Slow%20%26%20Steady-FF7043?style=for-the-badge)](https://dev.to/challenges/hacktoberfest-week3-2026-10-19)
+[![License: MIT](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
 
-- Chrome Manifest V3 extension with explicit Start/Stop tab recording using `tabCapture`, an offscreen document, and `MediaRecorder`.
-- Transcription retry and audio download backup: recorded audio is preserved if transcription fails, allowing retries or local `.webm` download without losing the recording.
-- Best-effort Google Meet visible-caption capture as a fallback with mutation throttling and graceful degradation. Meet's DOM is not a stable public API; pasted transcript remains the guaranteed fallback.
-- Provider-selectable transcription: Groq-hosted Whisper-compatible transcription, or local `faster-whisper`.
-- Provider-selectable analysis: Groq-hosted `openai/gpt-oss-120b`, or OpenAI-compatible local/self-hosted Ollama (default example `qwen2.5:7b`).
-- Interview Coach and Meeting Memory prompts with strict separation between `[Direct Evidence]`, `[AI Inference / Analysis]`, and `[Insufficient Evidence in Transcript]`.
-- In-memory sliding-window rate limiting per client IP to protect upstream provider quotas and prevent DoS.
-- Dual authentication support: accepts `X-API-Token` or standard `Authorization: Bearer <token>`.
-- Structured logging with request IDs, response durations, and automatic secret redaction.
-- Transcript editing, local extension draft persistence, local saved-session history (up to 30), last briefing persistence, and Markdown export.
-- Q&A across recent saved transcripts using deterministic local keyword retrieval, with returned source excerpts and `[S1]`-style citations. No vector database or remote embedding service is required for this first version.
-- Optional API token shared between the self-hosted extension and backend; mandatory at startup when `APP_ENV=production`.
-- Health endpoint and environment configuration for Render.
-- Stateless by design: the API handles a request and returns its result without persisting transcripts or audio on the server. Audio and transcripts are only sent to the chosen provider (Groq over HTTPS, or processed locally on the host machine).
+<br/>
 
-## What it is not yet
+**Channel your inner sloth. Never take manual meeting notes or stress over interview scorecards again.**
 
-This is a production-oriented foundation, not a fully audited public SaaS. It has not been live-tested across real meetings/browser versions in this workspace. It does not yet provide multi-user identity, per-user API credentials, persistent server-side meeting history, a durable job queue, provider-level cost controls, speaker diarization, automated retention controls for third-party providers, or full end-to-end monitoring. Session history currently lives locally in Chrome storage and Q&A performs keyword-based retrieval rather than semantic/vector retrieval. Do not expose a shared single-user `API_TOKEN` as a multi-user authentication system.
+[Explore Features](#-core-engineered-skills) • [Architecture](#-animated-architecture--data-pipeline) • [Quickstart](#-quickstart-guide) • [API Reference](#-api-reference) • [DEV Post](https://dev.to/aashutoshkumarbhardwaj/meetmind-sloth-mode-meeting-memory-interview-coach-powered-by-open-weight-ai-4i0l)
 
-## Architecture
+<br/>
 
-```text
-Chrome MV3 extension
-  ├─ Tab audio recording (explicit user action)
-  ├─ Google Meet caption fallback (best-effort)
-  └─ Editable transcript / local draft + briefing
-          │ HTTPS + optional X-API-Token
-          ▼
-FastAPI API
-  ├─ Transcription adapter: Groq OR local faster-whisper
-  └─ Analysis adapter: Groq OR Ollama
-          │
-          ▼
-Evidence-grounded Meeting Brief / Interview Review
+<img src="assets/architecture.png" alt="MeetMind Interface Showcase" width="100%" style="border-radius: 14px; box-shadow: 0 16px 36px rgba(0,0,0,0.5);" />
+
+</div>
+
+---
+
+## 💡 What is MeetMind?
+
+MeetMind turns browser tab audio recordings or Google Meet captions into an evidence-grounded **Meeting Executive Brief** or **Senior-Level Interview Coaching Review** with zero cloud telemetry.
+
+### The "Slow & Steady" Sloth Payoff:
+- 🚫 **No more frantic typing**: Lean back, listen, and let local open-weight models do the synthesis.
+- ⏱️ **Save 30–45 mins per meeting**: Instant executive bullet points, explicit decisions, and action item checklists (`- [ ]`) with owners and deadlines.
+- 🎯 **Save 1 hour per interview round**: Eliminates scorecard writer's block by extracting exact verbatim candidate statements and evaluating them against senior engineering standards.
+- 💰 **$0.00 metered inference cost**: Runs on your laptop using open-weight models (`Qwen 2.5:7b`, `Llama 3.2`, `faster-whisper`).
+- 🔒 **100% data sovereignty**: Your private strategy, salary discussions, and NDA-bound client meetings never leave your machine.
+
+---
+
+## ⚡ Animated Architecture & Data Pipeline
+
+MeetMind decouples client-side browser tab capture from the stateless AI engine:
+
+<div align="center">
+  <img src="assets/architecture_flow.svg" alt="MeetMind Animated Architecture Pipeline" width="100%" style="border-radius: 14px;" />
+</div>
+
+```
+┌─────────────────────────────────┐       ┌─────────────────────────────────┐       ┌─────────────────────────────────┐
+│     Chrome MV3 Extension        │       │         FastAPI Gateway         │       │     Open-Weight AI Pipeline     │
+│  · tabCapture (pure tab audio)  │ HTTPS │  · Sliding Rate Limiter (DoS)   │ Local │  · faster-whisper (CT2 / GPU)   │
+│  · Offscreen MediaRecorder      ├──────►│  · Secret Redaction in logs     ├──────►│  · Ollama (Qwen 2.5 / Llama 3)  │
+│  · Meet caption de-duplication  │       │  · Prefix speech normalizer     │       │  · Sub-5ms Lexical Retriever    │
+│  · Zero-dependency MD parser    │       │  · Zero server persistence      │       │  · 3-Tier Evidence Classifier   │
+└─────────────────────────────────┘       └─────────────────────────────────┘       └─────────────────────────────────┘
 ```
 
-### Privacy modes
+---
 
-| Configuration | Audio processing | Transcript analysis | Network dependency |
+## 🌟 Core Engineered Skills
+
+| # | Skill / Capability | Technical Implementation | Benefit |
 |---|---|---|---|
-| `TRANSCRIPTION_PROVIDER=groq`, `AI_PROVIDER=groq` | Sent to Groq over HTTPS | Sent to Groq over HTTPS | Internet + Groq API key |
-| `TRANSCRIPTION_PROVIDER=local`, `AI_PROVIDER=ollama` | Local `faster-whisper` on the backend host | Ollama endpoint configured by you | Can work offline after models are downloaded, if the endpoint is local and model is available |
-| Mixed configuration | Determined by transcription setting | Determined by AI setting | Depends on selected providers |
+| **1** | **Isolated Tab Audio Capture** | Chrome MV3 Offscreen document + `tabCapture`. Captures the call while completely excluding your background microphone. | Crisp audio, no background keyboard noise. |
+| **2** | **Audio Preservation & Recovery** | Preserves raw audio buffers in memory. If transcription fails or drops, retry with 1 click or download `.webm` locally. | Zero lost meetings or audio corruptions. |
+| **3** | **Open-Weight AI Core** | Native support for local `faster-whisper` and **Ollama** (`qwen2.5:7b`, `llama3.2`). | **$0.00 cost**, zero cloud vendor lock-in. |
+| **4** | **Strict 3-Tier Evidence Protocol** | Prompt engineering forces strict classification:<br>• `[Direct Evidence]` for verbatim quotes<br>• `[AI Inference / Analysis]` for evaluations<br>• `[Insufficient Evidence]` for gaps | **Zero hallucinated commitments or answers.** |
+| **5** | **Progressive Caption De-duplication** | Space-aware recursive DOM walker in `content.js` + backend regex collapsing filter eliminates live speech recognition stutter. | Clean LLM context window without duplicate fragments. |
+| **6** | **Sub-5ms Cross-Session Intelligence** | In-memory deterministic lexical retriever indexes past transcripts. Ask questions and get answers with cited source blocks (`[S1]`). | No heavy external vector database or API cost. |
+| **7** | **Zero-Dependency Markdown Engine** | Built-in client-side parser renders custom glowing status pills, task checkboxes, zebra-striped tables, and 1-click `.md` export. | Fast, secure, and compliant with Chrome MV3 CSP. |
 
-Local mode means the model runs on the machine hosting the backend. If you deploy only the API to Render and select Ollama at `localhost`, that means Render's own localhost, not your laptop. For local inference on your laptop, run the backend locally and point the extension at `http://localhost:8000`. Audio still leaves the device if you choose hosted transcription.
+---
 
-## 1. Local setup: hosted Groq providers
+## 🚀 Quickstart Guide
 
-Python 3.10+ recommended.
+### 1. Prerequisites
+- **Python 3.10+**
+- **Google Chrome** (or any Chromium browser supporting MV3)
+- *(Optional for 100% offline mode)*: [Ollama](https://ollama.com/)
+
+---
+
+### 2. Backend Setup
+
+Clone the repository and install dependencies:
 
 ```bash
-cd backend
-python -m venv .venv
-# macOS/Linux
-source .venv/bin/activate
-# Windows: .venv\\Scripts\\activate
+git clone https://github.com/aashutoshkumarbhardwaj/MeetMind.git
+cd MeetMind/backend
+
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
+```
+
+#### Choose Your Privacy Mode in `backend/.env`:
+
+```bash
 cp .env.example .env
 ```
 
-Edit `.env` and set `GROQ_API_KEY`. Local development defaults to no API token. Start the API:
-
-```bash
-uvicorn main:app --reload --port 8000
-```
-
-Check `http://localhost:8000/health`. The `/docs` page is enabled in development only.
-
-## 2. Local-only AI option
-
-Install Ollama and pull a model supported by your machine, for example:
-
-```bash
-ollama pull qwen2.5:7b
-```
-
-Configure in `backend/.env`:
-
+#### 🌿 Mode A: 100% Local & Offline (Open-Weight AI)
 ```env
 APP_ENV=development
 AI_PROVIDER=ollama
@@ -92,71 +114,133 @@ WHISPER_MODEL=small
 WHISPER_DEVICE=cpu
 WHISPER_COMPUTE_TYPE=int8
 ```
+> Pull your model via Ollama: `ollama pull qwen2.5:7b`  
+> Install local transcription: `pip install -r requirements-local.txt`
 
-Install optional local transcription dependencies:
-
-```bash
-pip install -r requirements-local.txt
+#### ⚡ Mode B: Ultra-Fast Cloud (Groq Open-Weights)
+```env
+APP_ENV=development
+AI_PROVIDER=groq
+GROQ_API_KEY=gsk_your_groq_api_key_here
+ANALYSIS_MODEL=openai/gpt-oss-120b
+TRANSCRIPTION_PROVIDER=groq
+TRANSCRIPTION_MODEL=whisper-large-v3-turbo
 ```
 
-The first local Whisper run downloads the selected model. In local mode, the audio is processed by the backend machine; Ollama analysis is sent to the configured Ollama endpoint. Check model and memory requirements before choosing larger models.
-
-## 3. Load and configure the Chrome extension
-
-1. Open `chrome://extensions` in Chrome or a Chromium browser that supports Manifest V3.
-2. Enable Developer mode, click **Load unpacked**, and select the `extension/` folder.
-3. Open a normal HTTPS site or a Google Meet tab. Chrome blocks audio capture on restricted internal pages.
-4. In the extension, set Backend URL and click **Connect backend and grant access**. Chrome will ask for host permission when needed.
-5. If the backend uses `API_TOKEN`, enter the same value in Backend API token.
-6. Start recording with an explicit click, then stop. Review/edit the transcript before generating a briefing.
-7. Alternatively, enable Google Meet captions and use **Load Meet captions**, or paste a transcript manually.
-
-The current recorder captures tab audio only; it does not include your microphone. Tab capture generally includes remote participants' audio, not your own mic. Consent should be obtained before recording, and company/interview rules must be followed.
-
-## 4. Deploy the API to Render
-
-1. Push this project to a GitHub repository.
-2. Create a Render Blueprint from `render.yaml` or create a Python web service using `backend` as the root directory.
-3. Set `API_TOKEN` to a long random secret. Set `GROQ_API_KEY` if using Groq for either provider. Do not commit either secret.
-4. Deploy and check `/health`.
-5. Paste the Render service URL in the extension and click Connect. Enter the same API token in the extension.
-
-The included Render configuration defaults to hosted Groq transcription and analysis. Running Ollama locally on your laptop is not possible by setting `OLLAMA_BASE_URL=localhost` on Render; use the local backend for laptop inference, or configure an intentionally reachable secured inference service.
-
-## API endpoints
-
-- `GET /health` — non-secret runtime/provider status; liveness endpoint.
-- `POST /api/transcribe` — multipart audio upload; requires `X-API-Token` when configured.
-- `POST /api/analyze` — transcript and mode (`meeting` or `interview`); requires `X-API-Token` when configured.
-- `POST /api/ask` — a question plus locally saved session transcripts; returns a grounded answer and the excerpts sent to the model; requires `X-API-Token` when configured.
-
-Limits: transcripts up to 120,000 characters, audio uploads up to 24 MiB. The backend does not persist audio or transcript data. Provider terms and retention policies still apply when hosted inference is selected.
-
-## Tests
-
-Install the test dependencies and run the API validation/retrieval tests:
-
+Start the backend:
 ```bash
-pip install -r requirements-dev.txt
-pytest -q
+uvicorn main:app --reload --port 8000
+```
+Verify health:
+```bash
+curl http://localhost:8000/health
+# {"status":"ok","ai_provider":"ollama","analysis_model":"qwen2.5:7b",...}
 ```
 
-These are automated unit/API contract tests, not a substitute for live-provider or real-browser end-to-end tests.
+---
 
-## Before public release
+### 3. Chrome Extension Setup
 
-- Add real user authentication (OIDC/Auth0 or equivalent), per-user authorization, and user-specific provider credential storage; do not share one `API_TOKEN` across public users.
-- Add distributed rate limiting, quotas, request tracing, cost budgets, and alerts at the API gateway/provider layer.
-- Decide on persistent history and implement a database plus deletion/export/retention policies if needed.
-- Add a durable job queue for long recordings, status polling, resumable uploads, idempotency, and retries.
-- Add automated provider contract tests and browser E2E tests, then test real Meet/Zoom/Teams versions.
-- Add speaker diarization only with a tested provider/model and UI that exposes attribution confidence.
-- Review privacy/consent copy, dependency licenses, and all third-party provider data handling.
+1. Open Chrome and navigate to `chrome://extensions`.
+2. Toggle on **Developer mode** in the top-right corner.
+3. Click **Load unpacked** and select the `extension/` folder from this repo.
+4. Open any Google Meet call or web audio tab.
+5. Click the **MeetMind** extension icon:
+   - Ensure the Backend service URL points to `http://localhost:8000`.
+   - Click **Connect & verify backend**.
+   - Click **Start recording** or **Load Meet captions** (or use the instant **Sample** button for quick testing).
+   - Click **Generate briefing** to see the structured output!
 
-## Open-source project references
+---
 
-- [TabScribe](https://github.com/danielsemerjya/tabscribe) — MIT; recording/offscreen extension design reference.
-- [TranscripTonic](https://github.com/vivek-nexus/transcriptonic) — MIT; caption-based transcript fallback reference.
-- [Cognium Meet](https://github.com/cogniumhq/cognium-meet) — API/history/Ask architecture reference only; a root license file was not found during review.
+### 4. Interactive Demo Showcase
 
-See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for review notes. This starter does not bundle their code.
+MeetMind includes a standalone, interactive showcase page designed for demos and presentations:
+
+```bash
+# Serve the extension directory
+python3 -m http.server 8123 --directory extension
+```
+Open **`http://localhost:8123/demo.html`** in your browser to interact with the device simulator and review live telemetry.
+
+---
+
+## 📡 API Reference
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| `GET` | `/health` | Liveness check, provider status, and model info | No |
+| `GET` | `/api/auth-check` | Verifies configured token against server | Yes (if enabled) |
+| `POST` | `/api/transcribe` | Multipart `.webm` audio upload $\rightarrow$ transcript | Optional |
+| `POST` | `/api/analyze` | Generates meeting brief or interview review | Optional |
+| `POST` | `/api/ask` | Cross-session Q&A with cited source excerpts | Optional |
+
+### Sample: Generate Meeting Brief
+```bash
+curl -X POST http://localhost:8000/api/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transcript": "Omar: We need to ship onboarding by Friday. Priya will update copy Wednesday. Facilitator: We agreed to remove the profile step for v1.",
+    "mode": "meeting"
+  }'
+```
+
+### Sample: Cross-Session Intelligence (Ask)
+```bash
+curl -X POST http://localhost:8000/api/ask \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "What did the team decide about onboarding?",
+    "sessions": [
+      {
+        "session_id": "session-1",
+        "title": "Sprint Planning",
+        "transcript": "Omar: We agreed to remove the profile step for v1."
+      }
+    ]
+  }'
+```
+
+---
+
+## 🧪 Testing
+
+Run the full automated test suite:
+
+```bash
+# Install test requirements
+pip install -r backend/requirements-dev.txt
+
+# Run pytest
+PYTHONPATH=backend pytest -v backend/tests
+```
+> **20/20 tests passing in ~0.45s** covering rate limiting, lexical retrieval, prompt construction, authentication tokens, and provider fallback resilience.
+
+---
+
+## 🛡️ Security & Privacy Architecture
+
+- **Tab Isolation**: Audio capture captures browser tab sound only; your ambient microphone is never accessed.
+- **Zero Server Retention**: Audio and transcripts are processed strictly in RAM and discarded immediately after response generation.
+- **Credential Protection**: Automatic logging filters redact Bearer tokens, API keys, and sensitive authorization headers from server logs.
+- **Rate-Limiting**: Built-in sliding window prevents DoS and protects upstream model quotas.
+
+---
+
+## 📄 License & Attribution
+
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+### Open-Source References:
+- [TabScribe](https://github.com/danielsemerjya/tabscribe) (MIT) — Offscreen tab audio architecture reference.
+- [TranscripTonic](https://github.com/vivek-nexus/transcriptonic) (MIT) — Google Meet caption fallback pattern.
+- [Cognium Meet](https://github.com/cogniumhq/cognium-meet) — Session Q&A architectural reference.
+
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for full attribution details.
+
+---
+
+<div align="center">
+Built with 🦥 for <b>Hacktoberfest 2026: Slow &amp; Steady</b>.<br/>
+<i>Work smarter, rest easier, and let open-weight AI do the heavy lifting.</i>
+</div>

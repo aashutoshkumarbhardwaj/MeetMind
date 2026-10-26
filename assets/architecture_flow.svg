@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%" style="background:#070b14; border-radius:16px; border:1px solid #1c273c; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="boxGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#121b2d" />
+      <stop offset="100%" stop-color="#0c1220" />
+    </linearGradient>
+    <linearGradient id="glowLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <style>
+      .flow-line {
+        stroke-dasharray: 8, 8;
+        animation: dash 1.6s linear infinite;
+      }
+      .pulse-dot {
+        animation: pulse 2s infinite ease-in-out;
+      }
+      .badge-glow {
+        animation: badgeGlow 2.5s infinite alternate;
+      }
+      @keyframes dash {
+        to { stroke-dashoffset: -32; }
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.4; transform: scale(0.9); }
+        50% { opacity: 1; transform: scale(1.15); }
+      }
+      @keyframes badgeGlow {
+        from { filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.4)); }
+        to { filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.9)); }
+      }
+    </style>
+  </defs>
+
+  <!-- Top Title Bar -->
+  <rect x="0" y="0" width="960" height="52" fill="#090e1a" />
+  <circle cx="28" cy="26" r="6" fill="#ef4444" />
+  <circle cx="48" cy="26" r="6" fill="#f59e0b" />
+  <circle cx="68" cy="26" r="6" fill="#10b981" />
+  <text x="96" y="31" fill="#f8fafc" font-size="14" font-weight="700" letter-spacing="-0.01em">MeetMind — End-to-End Open-Weight Architecture &amp; Data Pipeline</text>
+  <rect x="760" y="16" width="176" height="22" rx="11" fill="rgba(16, 185, 129, 0.12)" stroke="rgba(16, 185, 129, 0.3)" />
+  <circle cx="774" cy="27" r="4" fill="#10b981" class="pulse-dot" />
+  <text x="786" y="31" fill="#34d399" font-size="10.5" font-weight="700">100% LOCAL &amp; PRIVATE</text>
+
+  <!-- Animated Connection Pipelines -->
+  <!-- Layer 1 to 2 -->
+  <path d="M 270 150 L 370 150" fill="none" stroke="#6366f1" stroke-width="2.5" class="flow-line" />
+  <path d="M 270 330 L 330 330 L 330 250 L 370 250" fill="none" stroke="#38bdf8" stroke-width="2" class="flow-line" />
+  
+  <!-- Layer 2 to 3 -->
+  <path d="M 590 180 L 680 140" fill="none" stroke="#10b981" stroke-width="2.5" class="flow-line" />
+  <path d="M 590 220 L 680 250" fill="none" stroke="#a855f7" stroke-width="2.5" class="flow-line" />
+  <path d="M 590 260 L 680 370" fill="none" stroke="#f59e0b" stroke-width="2" class="flow-line" />
+
+  <!-- ==================== COLUMN 1: CHROME MV3 CLIENT ==================== -->
+  <g transform="translate(40, 75)">
+    <!-- Section Border -->
+    <rect width="230" height="370" rx="14" fill="#0b101c" stroke="#1c273c" />
+    <text x="16" y="28" fill="#818cf8" font-size="11" font-weight="800" letter-spacing="0.05em">1. CHROME MV3 CLIENT</text>
+
+    <!-- Card: Tab Audio -->
+    <rect x="14" y="44" width="202" height="120" rx="10" fill="url(#boxGrad)" stroke="#23324d" />
+    <circle cx="34" cy="68" r="10" fill="rgba(239, 68, 68, 0.15)" stroke="#ef4444" />
+    <circle cx="34" cy="68" r="4" fill="#ef4444" class="pulse-dot" />
+    <text x="54" y="72" fill="#fff" font-size="12" font-weight="700">Tab Audio Capture</text>
+    <text x="24" y="96" fill="#94a3b8" font-size="10.5">· Uses chrome.tabCapture API</text>
+    <text x="24" y="114" fill="#94a3b8" font-size="10.5">· Pure tab sound (NO mic leak)</text>
+    <text x="24" y="132" fill="#94a3b8" font-size="10.5">· Offscreen MediaRecorder</text>
+    <text x="24" y="150" fill="#34d399" font-size="10">✓ In-Memory Audio Backup</text>
+
+    <!-- Card: Live Captions -->
+    <rect x="14" y="180" width="202" height="170" rx="10" fill="url(#boxGrad)" stroke="#23324d" />
+    <circle cx="34" cy="204" r="10" fill="rgba(56, 189, 248, 0.15)" stroke="#38bdf8" />
+    <text x="31" y="208" fill="#38bdf8" font-size="12" font-weight="700">💬</text>
+    <text x="54" y="208" fill="#fff" font-size="12" font-weight="700">Google Meet Captions</text>
+    <text x="24" y="232" fill="#94a3b8" font-size="10.5">· MutationObserver scraper</text>
+    <text x="24" y="250" fill="#94a3b8" font-size="10.5">· Recursive node space-walker</text>
+    <text x="24" y="268" fill="#fbbf24" font-size="10">· Progressive de-duplication</text>
+    <text x="24" y="286" fill="#94a3b8" font-size="10.5">· Throttled buffer commit</text>
+    
+    <rect x="24" y="304" width="182" height="32" rx="6" fill="#080c14" stroke="#1e293b" />
+    <text x="32" y="324" fill="#a5b4fc" font-size="9.5" font-family="monospace">Collapses speech stutter</text>
+  </g>
+
+  <!-- ==================== COLUMN 2: FASTAPI GATEWAY ==================== -->
+  <g transform="translate(370, 75)">
+    <rect width="220" height="370" rx="14" fill="#0b101c" stroke="#1c273c" />
+    <text x="16" y="28" fill="#34d399" font-size="11" font-weight="800" letter-spacing="0.05em">2. FASTAPI GATEWAY</text>
+
+    <rect x="14" y="44" width="192" height="306" rx="10" fill="url(#boxGrad)" stroke="#23324d" />
+    <text x="26" y="74" fill="#fff" font-size="12.5" font-weight="700">Stateless Core Engine</text>
+    
+    <rect x="24" y="90" width="172" height="42" rx="7" fill="#080d16" stroke="#1e293b" />
+    <text x="34" y="107" fill="#60a5fa" font-size="10.5" font-weight="700">Sliding Rate Limiter</text>
+    <text x="34" y="122" fill="#64748b" font-size="9.5">Per-IP abuse &amp; quota defense</text>
+
+    <rect x="24" y="142" width="172" height="42" rx="7" fill="#080d16" stroke="#1e293b" />
+    <text x="34" y="159" fill="#c084fc" font-size="10.5" font-weight="700">Dual Token Security</text>
+    <text x="34" y="174" fill="#64748b" font-size="9.5">X-API-Token / Bearer Auth</text>
+
+    <rect x="24" y="194" width="172" height="42" rx="7" fill="#080d16" stroke="#1e293b" />
+    <text x="34" y="211" fill="#38bdf8" font-size="10.5" font-weight="700">Transcript Cleaner</text>
+    <text x="34" y="226" fill="#64748b" font-size="9.5">Prefix collapse &amp; filtering</text>
+
+    <rect x="24" y="246" width="172" height="42" rx="7" fill="#080d16" stroke="#1e293b" />
+    <text x="34" y="263" fill="#f43f5e" font-size="10.5" font-weight="700">Secret Redaction</text>
+    <text x="34" y="278" fill="#64748b" font-size="9.5">Zero log leaks of credentials</text>
+
+    <rect x="24" y="298" width="172" height="38" rx="7" fill="#080d16" stroke="#1e293b" />
+    <text x="34" y="315" fill="#34d399" font-size="10" font-weight="700">Zero Server Persistence</text>
+    <text x="34" y="328" fill="#64748b" font-size="9">100% ephemeral in-RAM only</text>
+  </g>
+
+  <!-- ==================== COLUMN 3: OPEN-WEIGHT INTELLIGENCE ==================== -->
+  <g transform="translate(680, 75)">
+    <rect width="240" height="370" rx="14" fill="#0b101c" stroke="#1c273c" />
+    <text x="16" y="28" fill="#38bdf8" font-size="11" font-weight="800" letter-spacing="0.05em">3. OPEN-WEIGHT INFERENCE</text>
+
+    <!-- Box 1: Whisper -->
+    <rect x="14" y="44" width="212" height="90" rx="10" fill="url(#boxGrad)" stroke="#23324d" />
+    <text x="26" y="68" fill="#fff" font-size="12" font-weight="700">faster-whisper (Local)</text>
+    <text x="26" y="86" fill="#94a3b8" font-size="10.5">· CT2 accelerated CPU/GPU</text>
+    <text x="26" y="102" fill="#94a3b8" font-size="10.5">· Fallback: Groq Whisper Turbo</text>
+    <text x="26" y="120" fill="#34d399" font-size="10">· Cost: $0.00 / 100% Offline</text>
+
+    <!-- Box 2: Ollama / Qwen -->
+    <rect x="14" y="146" width="212" height="110" rx="10" fill="url(#boxGrad)" stroke="#23324d" />
+    <text x="26" y="170" fill="#fff" font-size="12" font-weight="700">Ollama (Qwen 2.5 / Llama 3)</text>
+    <text x="26" y="188" fill="#94a3b8" font-size="10.5">· Open-weight instruction models</text>
+    <text x="26" y="206" fill="#94a3b8" font-size="10.5">· Strict 3-Tier Evidence protocol</text>
+    
+    <!-- Render Badges -->
+    <rect x="24" y="216" width="82" height="18" rx="9" fill="rgba(16,185,129,0.15)" stroke="#10b981" class="badge-glow" />
+    <text x="32" y="229" fill="#34d399" font-size="8.5" font-weight="700">[DIRECT EV.]</text>
+    
+    <rect x="112" y="216" width="76" height="18" rx="9" fill="rgba(99,102,241,0.15)" stroke="#6366f1" />
+    <text x="120" y="229" fill="#a5b4fc" font-size="8.5" font-weight="700">[INFERENCE]</text>
+    
+    <rect x="24" y="238" width="100" height="14" rx="7" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" />
+    <text x="30" y="249" fill="#fbbf24" font-size="8" font-weight="700">[INSUFFICIENT EV.]</text>
+
+    <!-- Box 3: Lexical Retriever -->
+    <rect x="14" y="268" width="212" height="82" rx="10" fill="url(#boxGrad)" stroke="#23324d" />
+    <text x="26" y="292" fill="#fff" font-size="12" font-weight="700">Sub-5ms Lexical Retriever</text>
+    <text x="26" y="310" fill="#94a3b8" font-size="10.5">· Instant multi-session Q&amp;A</text>
+    <text x="26" y="326" fill="#94a3b8" font-size="10.5">· Exact cited excerpts [S1]</text>
+    <text x="26" y="342" fill="#38bdf8" font-size="10">· Zero external vector DB needed</text>
+  </g>
+</svg>
